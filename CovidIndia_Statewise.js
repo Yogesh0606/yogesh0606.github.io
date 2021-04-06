@@ -5,27 +5,32 @@
     // Define the schema
     myConnector.getSchema = function(schemaCallback) {
         var cols = [{
-            id: "loc",
-            alias: "Location",
+            id: "active",
+            alias: "Active",
             dataType: tableau.dataTypeEnum.int
         },{
-            id: "confirmedCasesIndian",
+            id: "confirmed",
             alias: "Confirmed",
-            dataType: tableau.dataTypeEnum.int
-        },{
-            id: "discharged",
-            alias: "Discharged",
             dataType: tableau.dataTypeEnum.int
         },{
             id: "deaths",
             alias: "Deaths",
+            dataType: tableau.dataTypeEnum.int
+        },{
+            id: "lastupdatedtime",
+            alias: "Last Updated DateTime",
             dataType: tableau.dataTypeEnum.string
         },{
-            id: "totalConfirmed",
-            alias: "Total",
+            id: "recovered",
+            alias: "recovered",
             dataType: tableau.dataTypeEnum.int
+        },{
+            id: "state",
+            alias: "state",
+            dataType: tableau.dataTypeEnum.string
         }
-     ];
+        
+        ];
 
         var tableSchema = {
             id: "CovidStatewise",
@@ -39,8 +44,14 @@
     // Download the data
     myConnector.getData = function(table, doneCallback) {
 
+     /*   $.ajaxSetup({
+         headers : {
+            'x-rapidapi-host' : 'api-nba-v1.p.rapidapi.com',
+            'x-rapidapi-key' : 'd18cdeb3a2mshab6824adf713c9ep130fb2jsncca2d444588d'
+          } 
+        }); */
 
-        $.getJSON("https://api.rootnet.in/covid19-in/stats/latest", function(resp) {
+        $.getJSON("https://api.covid19india.org/data.json", function(resp) {
             var feat = resp.statewise,countryVal = "India",
                 tableData = [];
             
@@ -48,11 +59,13 @@
              for (var j = 0, len = feat.length; j < len; j++) { 
                     tableData.push({
                     
-                        "Location" : feat[j].loc,
-                        "Confirmed": feat[j].confirmedCasesIndian,
-                        "Discharged":feat[j].discharged,                    
-                        "Deaths":feat[j].deaths,
-                        "Total": feat[j].totalConfirmed
+                        "active" : feat[j].active,
+                        "confirmed": feat[j].confirmed,
+                        "deaths":feat[j].deaths,                    
+                        "lastupdatedtime":feat[j].lastupdatedtime,
+                        "recovered": feat[j].recovered,
+                        "state": feat[j].state,
+                        "country":countryVal
                         
                     });
             } 
